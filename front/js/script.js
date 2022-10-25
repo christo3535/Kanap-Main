@@ -1,4 +1,4 @@
-
+         const KanapAPI = "http://localhost:3000/api/products"
           const addArticle = document.querySelector(`#items`);
             
       
@@ -18,7 +18,7 @@
               <p class"productDesciption">${product.description}</p> 
         </article>`;
         addArticle.appendChild(newProduct);
-
+         
 
         }
 
