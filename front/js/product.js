@@ -37,25 +37,25 @@ const start = () => {
     .catch((err) => console.log(err));
 };
 
-const produitAjout = (product) => {
-  const productQuantity = parseInt(qty.value);
+    const produitAjout = (product) => {
+    const productQuantity = parseInt(qty.value);
 
   // valider  productQuantity et colorSelect
-  if (!colorSelect.value && productQuantity < 1 || productQuantity > 100) {
-    alert(
-      "You need to select atleast one quantity and you need to select a color"
-    );
-    return;
-  }
+        if (colorSelect.value == "" || productQuantity < 1 || productQuantity > 100) {
+         alert(
+      "Vous devez selectionner au moins une quantité et vous devez selectionner une couleur"
+              );
+        return;
+       }
 
   let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
   console.log(product);
 
-  const newItem = {
-    id: product._id,
-    itemColor: colorSelect.value,
-    itemQuantity: productQuantity,
-  };
+   const newItem = {
+        id: product._id,
+        itemColor: colorSelect.value,
+        itemQuantity: productQuantity,
+        };
 
   // trouve  element  dont id est egal à newItem.id
   const itemExists = currentCart.find((item) => item.id == newItem.id);
@@ -66,26 +66,12 @@ const produitAjout = (product) => {
     currentCart[index] = newItem;
   } else {
     currentCart.push(newItem);
-  }
+          }
+
 
   localStorage.setItem("cart", JSON.stringify(currentCart));
   alert("Votre produit est dans le panier");
 
-  // 1 Récupérer couleur et quantité
-
-  /**
-   * Si click bouton sans couleur ou sans quantité => erreur
-   * Si quantité inférieure à 1 ou supérieure à 100 => erreur
-   */
-
-  /**
-   * Si le produit n'existe pas déjà dans le panier on l'ajoute
-   *
-   * Si il existe (id, couleur) => on ajoute la nouvelle quantité
-   */
-
-  // 2 Construire un nouvel objet avec {id, couleur, quantité}
-  // 3 Ajouter cet objet dans le panier
 };
 
 window.addEventListener("load", start);
