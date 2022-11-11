@@ -37,41 +37,58 @@ const start = () => {
     .catch((err) => console.log(err));
 };
 
-    const produitAjout = (product) => {
-    const productQuantity = parseInt(qty.value);
+const produitAjout = (product) => {
+  const productQuantity = parseInt(qty.value);
+
 
   // valider  productQuantity et colorSelect
-        if (colorSelect.value == "" || productQuantity < 1 || productQuantity > 100) {
-         alert(
+  if (colorSelect.value == "" || productQuantity < 1 || productQuantity > 100) {
+    alert(
       "Vous devez selectionner au moins une quantité et vous devez selectionner une couleur"
-              );
-        return;
-       }
+    );
+    return;
+  }
 
   let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-  console.log(product);
 
-   const newItem = {
-        id: product._id,
-        itemColor: colorSelect.value,
-        itemQuantity: productQuantity,
-        };
+  // trouver  element  dont id est egal à newItem.id // TODO RAJOUTER LA COULEUR (on test id et couleur de canaper)
+  const itemExists = currentCart.find(
+    (item) => item.id === product._id && item.itemColor === colorSelect.value
+  );
 
-  // trouve  element  dont id est egal à newItem.id
-  const itemExists = currentCart.find((item) => item.id == newItem.id);
+   
+
+  const newItemQuantity = itemExists?.itemQuantity || 0;
+
+  const newItem = {
+    id: product._id,
+    itemColor: colorSelect.value,
+    itemQuantity: productQuantity + newItemQuantity,
+  };
+
+   console.log(itemExists);
 
   if (itemExists) {
     // si  on trouve element avec le meme id on le remplace par newItem
     const index = currentCart.indexOf(itemExists);
-    currentCart[index] = newItem;
+     console.log(index);
+
+    // Affiche le produit qui correspond à l'index (produit qui est dans le panier)
+     console.log(currentCart[index]);
+
+    // Ici on atteint la proprité itemQuantity du produit. C'est elle qui faut mettre à jour
+     console.log(currentCart[index].itemQuantity);
+
+    currentCart[index] = newItem; // TODO Attention faut écraser les données mais ajouter la quantité
   } else {
     currentCart.push(newItem);
-          }
-
+  }
+  
 
   localStorage.setItem("cart", JSON.stringify(currentCart));
+  console.log(localStorage.getItem("cart"));
   alert("Votre produit est dans le panier");
-
+  
 };
 
 window.addEventListener("load", start);
