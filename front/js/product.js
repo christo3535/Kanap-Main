@@ -60,13 +60,13 @@ const produitAjout = (product) => {
 
   const newItemQuantity = itemExists?.itemQuantity || 0;
 
-  const newItem = {
+  const newItem = { 
     id: product._id,
     itemColor: colorSelect.value,
     itemQuantity: productQuantity + newItemQuantity,
   };
 
-   console.log(itemExists);
+    console.log(itemExists);
 
   if (itemExists) {
     // si  on trouve element avec le meme id on le remplace par newItem
