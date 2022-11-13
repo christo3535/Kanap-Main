@@ -60,7 +60,7 @@ const produitAjout = (product) => {
 
   const newItemQuantity = itemExists?.itemQuantity || 0;
 
-  const newItem = { 
+  const newItem = {
     id: product._id,
     itemColor: colorSelect.value,
     itemQuantity: productQuantity + newItemQuantity,
