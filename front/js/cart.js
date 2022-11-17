@@ -11,7 +11,7 @@ function displayProduct(productId, productColor, productQuantity) {
     .then((res) => res.json())
     .then((produit) => {
       products.push(produit);
-      // calculateTotal();
+      calculateTotal();
       const newLigne = document.createElement("article");
       newLigne.setAttribute("class", "cart__item");
       newLigne.setAttribute("data-id", produit._id);
@@ -39,88 +39,88 @@ function displayProduct(productId, productColor, productQuantity) {
                               </article>`;
       cartItems.appendChild(newLigne);
 
-      // const deleteBtn = document.querySelector(
-      //   `[data-id="${produit._id}"][data-color="${productColor}"] .deleteItem`
-      // );
+      const deleteBtn = document.querySelector(
+        `[data-id="${produit._id}"][data-color="${productColor}"] .deleteItem`
+      );
 
-      // const changeBtn = document.querySelector(
-      //   `[data-id="${produit._id}"][data-color="${productColor}"] .itemQuantity`
-      // );
+      const changeBtn = document.querySelector(
+        `[data-id="${produit._id}"][data-color="${productColor}"] .itemQuantity`
+      );
 
-      // changeBtn.addEventListener("change", (e) => {
-      //   changeQuantity(produit._id, productColor, e.target.value);
-      // });
+      changeBtn.addEventListener("change", (e) => {
+        changeQuantity(produit._id, productColor, e.target.value);
+      });
 
-      // deleteBtn.addEventListener("click", () => {
-      //   deleteItem(produit._id, productColor);
-      // });
+      deleteBtn.addEventListener("click", () => {
+        deleteItem(produit._id, productColor);
+      });
 
       console.log(produit.name);
     });
 }
 
-// const changeQuantity = (id, color, value) => {
-//   const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
+const changeQuantity = (id, color, value) => {
+  const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-//   // find item with that id
-//   let item = updatedCart.find((i) => i.id == id && i.itemColor == color);
+  // find item with that id
+  let item = updatedCart.find((i) => i.id == id && i.itemColor == color);
 
-//   // get item's index
+  // get item's index
 
-//   let index = updatedCart.indexOf(item);
+  let index = updatedCart.indexOf(item);
 
-//   // update cart
-//   item.itemQuantity = value;
-//   updatedCart[index] = item;
+  // update cart
+  item.itemQuantity = value;
+  updatedCart[index] = item;
 
-//   // update cart in localStorage
+  // update cart in localStorage
 
-//   localStorage.setItem("cart", JSON.stringify(updatedCart));
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-//   // calculate total price and quiantity
+  // calculate total price and quiantity
 
-//   calculateTotal();
-// };
+  calculateTotal();
+};
 
-// const deleteItem = (productId, color) => {
-//   let product = cart.find((i) => i.id == productId);
+const deleteItem = (productId, color) => {
+  let product = cart.find((i) => i.id == productId);
 
-//   let productItemDom = document.querySelector(
-//     `[data-id="${productId}"][data-color="${color}"]`
-//   );
+  let productItemDom = document.querySelector(
+    `[data-id="${productId}"][data-color="${color}"]`
+  );
 
-//   // remove item from array
-//   const index = cart.indexOf(product);
-//   if (index > -1) {
-//     cart.splice(index, 1);
-//   }
+  // remove item from array
+  const index = cart.indexOf(product);
+  if (index > -1) {
+    cart.splice(index, 1);
+  }
 
-//   // update cart
-//   localStorage.setItem("cart", JSON.stringify(cart));
+  // update cart
+  localStorage.setItem("cart", JSON.stringify(cart));
 
-//   // remove product item from DOM
-//   cartItems.removeChild(productItemDom);
+  // remove product item from DOM
+  cartItems.removeChild(productItemDom);
 
-//   calculateTotal();
-// };
+  calculateTotal();
+};
 
-// const calculateTotal = () => {
-//   const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
-//   let total = 0;
-//   let totalQuantityNumber = 0;
+const calculateTotal = () => {
+  const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  let total = 0;
+  let totalQuantityNumber = 0;
 
-//   for (let item of updatedCart) {
-//     let prod = products.find((i) => i._id == item.id);
+  for (let item of updatedCart) {
+    let prod = products.find((i) => i._id == item.id);
 
-//     if (prod) {
-//       let price = prod.price * item.itemQuantity;
-//       total += price;
-//       totalQuantityNumber += parseInt(item.itemQuantity);
-//     }
-//   }
-//   totalPrice.textContent = total;
-//   totalQuantity.textContent = totalQuantityNumber;
-// };
+    if (prod) {
+      let price = prod.price * item.itemQuantity;
+      total += price;
+      totalQuantityNumber += parseInt(item.itemQuantity);
+    }
+  }
+  totalPrice.textContent = total;
+  totalQuantity.textContent = totalQuantityNumber;
+};
 
 for (let item of cart) {
   console.log(`${item.id}-${item.itemColor}-${item.itemQuantity}`);

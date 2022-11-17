@@ -51,7 +51,7 @@ const produitAjout = (product) => {
 
   let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // trouver  element  dont id est egal à newItem.id // TODO RAJOUTER LA COULEUR (on test id et couleur de canaper)
+  // trouver  element  dont id est egal à newItem.id 
   const itemExists = currentCart.find(
     (item) => item.id === product._id && item.itemColor === colorSelect.value
   );
@@ -79,7 +79,7 @@ const produitAjout = (product) => {
     // Ici on atteint la proprité itemQuantity du produit. C'est elle qui faut mettre à jour
      console.log(currentCart[index].itemQuantity);
 
-    currentCart[index] = newItem; // TODO Attention faut écraser les données mais ajouter la quantité
+    currentCart[index] = newItem; 
   } else {
     currentCart.push(newItem);
   }
