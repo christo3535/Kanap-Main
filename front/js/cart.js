@@ -2,7 +2,7 @@ let KanapAPI = "http://localhost:3000/api/products/";
 const cartItems = document.querySelector("#cart__items");
 const totalPrice = document.querySelector("#totalPrice");
 const totalQuantity = document.querySelector("#totalQuantity");
-
+const order  = document.querySelector("#order")
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const products = [];
 
@@ -10,7 +10,7 @@ function displayProduct(productId, productColor, productQuantity) {
   fetch(KanapAPI + productId)
     .then((res) => res.json())
     .then((produit) => {
-      products.push(produit);
+       products.push(produit);
       calculateTotal();
       const newLigne = document.createElement("article");
       newLigne.setAttribute("class", "cart__item");
@@ -52,53 +52,57 @@ function displayProduct(productId, productColor, productQuantity) {
       });
 
       deleteBtn.addEventListener("click", () => {
+        
         deleteItem(produit._id, productColor);
       });
 
       console.log(produit.name);
     });
+
+
 }
 
 const changeQuantity = (id, color, value) => {
   const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // find item with that id
-  let item = updatedCart.find((i) => i.id == id && i.itemColor == color);
+  // trouver item avec cet id
+  let item = updatedCart.find((i) => i.id === id && i.itemColor === color);
 
-  // get item's index
+  // obtenir les indexs 
 
   let index = updatedCart.indexOf(item);
 
-  // update cart
+  //  mise à jour 
   item.itemQuantity = value;
   updatedCart[index] = item;
 
-  // update cart in localStorage
+  // mise à jour du panier dans le localStorage
 
   localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-  // calculate total price and quiantity
+
 
   calculateTotal();
 };
 
 const deleteItem = (productId, color) => {
-  let product = cart.find((i) => i.id == productId);
+  const cards = JSON.parse(localStorage.getItem("cart")) || [];
+  let product = cards.find((i) => i.id == productId);
 
   let productItemDom = document.querySelector(
     `[data-id="${productId}"][data-color="${color}"]`
   );
 
-  // remove item from array
-  const index = cart.indexOf(product);
+  // retirer item du tableau
+  const index = cards.indexOf(product);
   if (index > -1) {
-    cart.splice(index, 1);
+    cards.splice(index, 1);
   }
 
-  // update cart
-  localStorage.setItem("cart", JSON.stringify(cart));
+  // mise à jour du panier
+  localStorage.setItem("cart", JSON.stringify(cards));
 
-  // remove product item from DOM
+  // retirer product item du DOM
   cartItems.removeChild(productItemDom);
 
   calculateTotal();
@@ -110,7 +114,7 @@ const calculateTotal = () => {
   let totalQuantityNumber = 0;
 
   for (let item of updatedCart) {
-    let prod = products.find((i) => i._id == item.id);
+     let prod = products.find((i) => i._id == item.id);
 
     if (prod) {
       let price = prod.price * item.itemQuantity;
@@ -125,4 +129,11 @@ const calculateTotal = () => {
 for (let item of cart) {
   console.log(`${item.id}-${item.itemColor}-${item.itemQuantity}`);
   displayProduct(item.id, item.itemColor, item.itemQuantity);
+
 }
+
+
+order.addEventListener("submit",(event) =>{
+  event.preventDefault();
+  
+})

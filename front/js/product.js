@@ -71,7 +71,7 @@ const produitAjout = (product) => {
   if (itemExists) {
     // si  on trouve element avec le meme id on le remplace par newItem
     const index = currentCart.indexOf(itemExists);
-     console.log(index);
+     
 
     // Affiche le produit qui correspond à l'index (produit qui est dans le panier)
      console.log(currentCart[index]);
@@ -86,7 +86,7 @@ const produitAjout = (product) => {
   
 
   localStorage.setItem("cart", JSON.stringify(currentCart));
-  console.log(localStorage.getItem("cart"));
+  
   alert("Votre produit est dans le panier");
   
 };
