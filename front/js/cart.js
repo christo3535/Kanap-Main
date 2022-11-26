@@ -2,7 +2,7 @@ let KanapAPI = "http://localhost:3000/api/products/";
 const cartItems = document.querySelector("#cart__items");
 const totalPrice = document.querySelector("#totalPrice");
 const totalQuantity = document.querySelector("#totalQuantity");
-const order  = document.querySelector("#order")
+const order = document.querySelector("#order");
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const products = [];
 
@@ -10,7 +10,7 @@ function displayProduct(productId, productColor, productQuantity) {
   fetch(KanapAPI + productId)
     .then((res) => res.json())
     .then((produit) => {
-       products.push(produit);
+      products.push(produit);
       calculateTotal();
       const newLigne = document.createElement("article");
       newLigne.setAttribute("class", "cart__item");
@@ -52,14 +52,11 @@ function displayProduct(productId, productColor, productQuantity) {
       });
 
       deleteBtn.addEventListener("click", () => {
-        
         deleteItem(produit._id, productColor);
       });
 
       console.log(produit.name);
     });
-
-
 }
 
 const changeQuantity = (id, color, value) => {
@@ -68,11 +65,11 @@ const changeQuantity = (id, color, value) => {
   // trouver item avec cet id
   let item = updatedCart.find((i) => i.id === id && i.itemColor === color);
 
-  // obtenir les indexs 
+  // obtenir les indexs
 
   let index = updatedCart.indexOf(item);
 
-  //  mise à jour 
+  //  mise à jour
   item.itemQuantity = value;
   updatedCart[index] = item;
 
@@ -80,27 +77,25 @@ const changeQuantity = (id, color, value) => {
 
   localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-
-
   calculateTotal();
 };
 
 const deleteItem = (productId, color) => {
-  const cards = JSON.parse(localStorage.getItem("cart")) || [];
-  let product = cards.find((i) => i.id == productId);
+  const carts = JSON.parse(localStorage.getItem("cart")) || [];
+  let product = carts.find((i) => i.id == productId);
 
   let productItemDom = document.querySelector(
     `[data-id="${productId}"][data-color="${color}"]`
   );
 
   // retirer item du tableau
-  const index = cards.indexOf(product);
+  const index = carts.indexOf(product);
   if (index > -1) {
-    cards.splice(index, 1);
+    carts.splice(index, 1);
   }
 
   // mise à jour du panier
-  localStorage.setItem("cart", JSON.stringify(cards));
+  localStorage.setItem("cart", JSON.stringify(carts));
 
   // retirer product item du DOM
   cartItems.removeChild(productItemDom);
@@ -114,7 +109,7 @@ const calculateTotal = () => {
   let totalQuantityNumber = 0;
 
   for (let item of updatedCart) {
-     let prod = products.find((i) => i._id == item.id);
+    let prod = products.find((i) => i._id == item.id);
 
     if (prod) {
       let price = prod.price * item.itemQuantity;
@@ -129,11 +124,78 @@ const calculateTotal = () => {
 for (let item of cart) {
   console.log(`${item.id}-${item.itemColor}-${item.itemQuantity}`);
   displayProduct(item.id, item.itemColor, item.itemQuantity);
-
 }
 
+order.addEventListener("click", (e) => {
+  e.preventDefault();
+  ordre();
+});
 
-order.addEventListener("submit",(event) =>{
-  event.preventDefault();
-  
-})
+// аррай който съдържа имената и regex за валидация
+const allRegex = [
+  {
+    name: "firstName",
+    regex: /^[A-Za-zÀ-ü-' ]+$/,
+    error : "Prenom incorect",
+    valdate : "Prenom"
+  },
+  {
+    name: "lastName",
+    regex: /^[A-Za-zÀ-ü-' ]+$/,
+  },
+  {
+    name: "address",
+    regex:/^[0-9]+\s[A-Za-zÀ-ü-'\s]+/ ,
+  },
+  {
+    name: "city",
+    regex: /^[A-Za-zÀ-ü-']+$/,
+  },
+  {
+    name: "email",
+    regex: /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/, 
+  },
+];
+
+const checkInputs = () => {
+  let data = {};
+
+  for (let field of allRegex) {
+    // взимаме елемента input
+    let fieldInput = document.querySelector(`#${field.name}`);
+    //неговата стойност
+    let inputValue = fieldInput.value;
+
+    // целата на това е когато човека има грешка и почне да пише нещо друго тя да се махне оттам
+    fieldInput.addEventListener("change", () => {
+      fieldInput.nextElementSibling = "";
+    });
+
+    // ako ima regex proverqvame
+    if (field.regex) {
+      // testvame ako tova koeto e vaval user-a e validno sprqmo regex-a
+      if (!field.regex.test(inputValue)) {
+        // ako ne slgame greshka v sledvashtq element
+        // - input
+        // - p.errorMsg - tova e sledvashtiq element sled input-a
+        fieldInput.nextElementSibling.innerHTML = `${field.name} erreur`;
+        fieldInput.nextElementSibling.style.color = "red"
+        // prodalvava natatyk s sledvashtiq input bez da izpalnqva koda go kraj. t.e. Bez da preminava prez data[field.name] = inputValue
+        // celta na tova e da ne se dobavq kato proveren ako ne e validen
+        continue;
+      }
+    }
+
+    // tova koeto pravi tova e da dabavi stojnosta kam data = {}
+    // t.e. { firstName: "...", lastName: "...", ....}
+    data[field.name] = inputValue;
+  }
+
+  // vrashtame stojnosta
+  return data;
+};
+
+const ordre = () => {
+  let data = checkInputs();
+  console.log(data);
+};
