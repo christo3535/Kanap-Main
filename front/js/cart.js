@@ -135,9 +135,9 @@ order.addEventListener("click", (e) => {
 const allRegex = [
   {
     name: "firstName",
-    regex: /^[A-Za-zÀ-ü-' ]+$/,
-    error : "Prenom incorect",
-    valdate : "Prenom"
+    regex: /^[A-Za-zÀ]{2,38}$/,
+    error: "Prenom incorect",
+    valdate: "Prenom",
   },
   {
     name: "lastName",
@@ -145,7 +145,7 @@ const allRegex = [
   },
   {
     name: "address",
-    regex:/^[0-9]+\s[A-Za-zÀ-ü-'\s]+/ ,
+    regex: /^[0-9]+\s[A-Za-zÀ-ü-'\s]+/,
   },
   {
     name: "city",
@@ -153,12 +153,13 @@ const allRegex = [
   },
   {
     name: "email",
-    regex: /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/, 
+    regex: /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/,
   },
 ];
 
 const checkInputs = () => {
   let data = {};
+  let next = true;
 
   for (let field of allRegex) {
     // взимаме елемента input
@@ -168,7 +169,7 @@ const checkInputs = () => {
 
     // целата на това е когато човека има грешка и почне да пише нещо друго тя да се махне оттам
     fieldInput.addEventListener("change", () => {
-      fieldInput.nextElementSibling = "";
+      fieldInput.nextElementSibling.innerHTML = "";
     });
 
     // ako ima regex proverqvame
@@ -178,10 +179,11 @@ const checkInputs = () => {
         // ako ne slgame greshka v sledvashtq element
         // - input
         // - p.errorMsg - tova e sledvashtiq element sled input-a
-        fieldInput.nextElementSibling.innerHTML = `${field.name} erreur`;
-        fieldInput.nextElementSibling.style.color = "red"
+        fieldInput.nextElementSibling.innerHTML = `erreur`;
+        fieldInput.nextElementSibling.style.color = "red";
         // prodalvava natatyk s sledvashtiq input bez da izpalnqva koda go kraj. t.e. Bez da preminava prez data[field.name] = inputValue
         // celta na tova e da ne se dobavq kato proveren ako ne e validen
+        next = false;
         continue;
       }
     }
@@ -192,10 +194,48 @@ const checkInputs = () => {
   }
 
   // vrashtame stojnosta
-  return data;
+  if (next) {
+    return data;
+  }
+  return false;
 };
 
 const ordre = () => {
   let data = checkInputs();
-  console.log(data);
+  if (!data) {
+    return;
+  }
+
+  let products = JSON.parse(localStorage.getItem("cart")) || [];
+  let productData = [];
+
+  for (let product of products) {
+    for (let index = 0; index < product.itemQuantity; index++) {
+      productData.push(product.id);
+    }
+  }
+
+  fetch(KanapAPI + "order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      contact: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        city: data.city,
+        address: data.address,
+        email: data.email,
+      },
+      products: productData,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 };
