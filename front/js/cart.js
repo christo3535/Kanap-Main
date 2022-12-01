@@ -6,7 +6,8 @@ const order = document.querySelector("#order");
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const products = [];
 
-function displayProduct(productId, productColor, productQuantity) {
+const displayProduct = (productId, productColor, productQuantity) => {
+  console.log("fetch");
   fetch(KanapAPI + productId)
     .then((res) => res.json())
     .then((produit) => {
@@ -56,8 +57,9 @@ function displayProduct(productId, productColor, productQuantity) {
       });
 
       console.log(produit.name);
-    });
-}
+    })
+    .catch((error) => alert("error"));
+};
 
 const changeQuantity = (id, color, value) => {
   const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -109,7 +111,7 @@ const calculateTotal = () => {
   let totalQuantityNumber = 0;
 
   for (let item of updatedCart) {
-    let prod = products.find((i) => i._id == item.id);
+    let prod = products.find((i) => i._id === item.id);
 
     if (prod) {
       let price = prod.price * item.itemQuantity;
@@ -120,84 +122,89 @@ const calculateTotal = () => {
   totalPrice.textContent = total;
   totalQuantity.textContent = totalQuantityNumber;
 };
+const demarage = () => {
+  for (let item of cart) {
+    console.log(`${item.id}-${item.itemColor}-${item.itemQuantity}`);
+    displayProduct(item.id, item.itemColor, item.itemQuantity);
+  }
 
-for (let item of cart) {
-  console.log(`${item.id}-${item.itemColor}-${item.itemQuantity}`);
-  displayProduct(item.id, item.itemColor, item.itemQuantity);
-}
+  order.addEventListener("click", (e) => {
+    e.preventDefault();
+    ordre();
+  });
+};
 
-order.addEventListener("click", (e) => {
-  e.preventDefault();
-  ordre();
-});
-
-// аррай който съдържа имената и regex за валидация
 const allRegex = [
   {
     name: "firstName",
-    regex: /^[A-Za-zÀ]{2,38}$/,
-    error: "Prenom incorect",
-    valdate: "Prenom",
+    regex: /^[A-Za-z-]+$/,
+    error: "Le prenom n'est pas valide",
+    validate: "Prenom v",
   },
   {
     name: "lastName",
-    regex: /^[A-Za-zÀ-ü-' ]+$/,
+    regex: /^[A-Za-z-]+$/,
+    error: "Le nom de famille n'est pas valide",
+    validate: "Nom v",
   },
   {
     name: "address",
-    regex: /^[0-9]+\s[A-Za-zÀ-ü-'\s]+/,
+    regex: /^[0-9]+\s[0-9A-Za-zÀ-ü-'\s]+/,
+    error: "L'adresse n'est pas valide",
+    validate: "Adresse v",
   },
   {
     name: "city",
-    regex: /^[A-Za-zÀ-ü-']+$/,
+    regex: /^[A-Za-zÀ-ü-'\s]+$/,
+    error: "Le nom de la ville n'est pas valide",
+    validate: "Ville v",
   },
   {
     name: "email",
     regex: /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/,
+    error: "l'email que vous avez saisi n'est pas valide",
+    validate: "Email v",
   },
 ];
 
 const checkInputs = () => {
   let data = {};
-  let next = true;
+  let validForm = true;
 
   for (let field of allRegex) {
-    // взимаме елемента input
+    // selectionner élément input
     let fieldInput = document.querySelector(`#${field.name}`);
-    //неговата стойност
+    //la valeur de l'input
     let inputValue = fieldInput.value;
 
-    // целата на това е когато човека има грешка и почне да пише нещо друго тя да се махне оттам
     fieldInput.addEventListener("change", () => {
-      fieldInput.nextElementSibling.innerHTML = "";
+      //efacce le message d'erreur quand on modifie le champs grace a l'innerHtml
+      fieldInput.nextElementSibling.innerHTML = field.validate;
     });
 
-    // ako ima regex proverqvame
+    // s'il y a regex verification
     if (field.regex) {
-      // testvame ako tova koeto e vaval user-a e validno sprqmo regex-a
+      // test de la valeur mise par l'utilisateur  si regex valide
+
       if (!field.regex.test(inputValue)) {
-        // ako ne slgame greshka v sledvashtq element
-        // - input
-        // - p.errorMsg - tova e sledvashtiq element sled input-a
-        fieldInput.nextElementSibling.innerHTML = `erreur`;
-        fieldInput.nextElementSibling.style.color = "red";
-        // prodalvava natatyk s sledvashtiq input bez da izpalnqva koda go kraj. t.e. Bez da preminava prez data[field.name] = inputValue
-        // celta na tova e da ne se dobavq kato proveren ako ne e validen
-        next = false;
+        // sinon  erreur dans nextElementSibling
+
+        fieldInput.nextElementSibling.textContent = field.error;
+        // fieldInput.nextElementSibling.style.color = "red";
+
+        validForm = false;
         continue;
       }
     }
 
-    // tova koeto pravi tova e da dabavi stojnosta kam data = {}
-    // t.e. { firstName: "...", lastName: "...", ....}
     data[field.name] = inputValue;
   }
 
-  // vrashtame stojnosta
-  if (next) {
+  if (validForm) {
     return data;
+  } else {
+    return false;
   }
-  return false;
 };
 
 const ordre = () => {
@@ -208,7 +215,9 @@ const ordre = () => {
 
   let products = JSON.parse(localStorage.getItem("cart")) || [];
   let productData = [];
-
+  if(!products[0]){
+    return
+  }
   for (let product of products) {
     for (let index = 0; index < product.itemQuantity; index++) {
       productData.push(product.id);
@@ -234,8 +243,12 @@ const ordre = () => {
     .then((response) => response.json())
     .then((data) => {
       console.log("Success:", data);
+      window.location.replace("confirmation.html?orderId=" + data.orderId)
     })
+
     .catch((error) => {
       console.error("Error:", error);
     });
 };
+
+window.addEventListener("load", demarage);
