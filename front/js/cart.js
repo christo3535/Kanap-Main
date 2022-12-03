@@ -217,6 +217,7 @@ const ordre = () => {
   let productData = [];
   if(!products[0]){
     return
+    
   }
   for (let product of products) {
     for (let index = 0; index < product.itemQuantity; index++) {
@@ -243,11 +244,15 @@ const ordre = () => {
     .then((response) => response.json())
     .then((data) => {
       console.log("Success:", data);
+      localStorage.clear();
       window.location.replace("confirmation.html?orderId=" + data.orderId)
+      
     })
+    
 
     .catch((error) => {
       console.error("Error:", error);
+      
     });
 };
 

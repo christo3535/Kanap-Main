@@ -78,7 +78,7 @@ const produitAjout = (product) => {
 
     // Ici on atteint la proprité itemQuantity du produit. C'est elle qui faut mettre à jour
      console.log(currentCart[index].itemQuantity);
-
+    console.log(currentCart[index].itemColor);
     currentCart[index] = newItem; 
   } else {
     currentCart.push(newItem);
