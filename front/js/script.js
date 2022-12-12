@@ -1,10 +1,10 @@
 const KanapAPI = "http://localhost:3000/api/products";
-const addArticle = document.querySelector(`#items`);
+const addArticle = document.querySelector('#items');
 
 
 const start = () => {
-      
-      fetch("http://localhost:3000/api/products")
+      //Requete API des informations des produits
+      fetch(KanapAPI)
             .then((data) => data.json())
             .then((products) => {
                   for (let product of products) {

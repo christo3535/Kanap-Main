@@ -14,7 +14,8 @@ const id = urlParams.get("id");
 
 // Récupération du produit depuis l'API
 // Affichage des élements des  produits
-const start = () => {
+const start = () => 
+{
   fetch(KanapAPI + id)
     .then((res) => res.json())
     .then((product) => {
@@ -36,10 +37,10 @@ const start = () => {
     })
     .catch((err) => console.log(err));
 };
-
+// ajout du ou des produits
 const produitAjout = (product) => {
   const productQuantity = parseInt(qty.value);
-
+console.log(product);
 
   // valider  productQuantity et colorSelect
   if (colorSelect.value == "" || productQuantity < 1 || productQuantity > 100) {
@@ -84,7 +85,7 @@ const produitAjout = (product) => {
     currentCart.push(newItem);
   }
   
-
+  
   localStorage.setItem("cart", JSON.stringify(currentCart));
   
   alert("Votre produit est dans le panier");
