@@ -125,7 +125,7 @@ const calculateTotal = () => {
   totalQuantity.textContent = totalQuantityNumber;
 };
 // demmarage du script
-const star = () => {
+const start = () => {
   for (let item of cart) {
     displayProduct(item.id, item.itemColor, item.itemQuantity);
   }

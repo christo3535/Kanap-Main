@@ -71,10 +71,12 @@ const produitAjout = (product) => {
     // alert("La quantité a été mise à jour")
   } else {
     currentCart.push(newItem);
-    alert("Votre produit est dans le panier");
+
   }
      // enregistrement du panier
   localStorage.setItem("cart", JSON.stringify(currentCart));
+  alert("Votre produit est dans le panier");
+
 };
 
 window.addEventListener("load", start);
