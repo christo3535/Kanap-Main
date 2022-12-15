@@ -14,8 +14,7 @@ const id = urlParams.get("id");
 
 // Récupération du produit depuis l'API
 // Affichage des élements des  produits
-const start = () => 
-{
+const start = () => {
   fetch(KanapAPI + id)
     .then((res) => res.json())
     .then((product) => {
@@ -40,7 +39,6 @@ const start = () =>
 // ajout du ou des produits
 const produitAjout = (product) => {
   const productQuantity = parseInt(qty.value);
-console.log(product);
 
   // valider  productQuantity et colorSelect
   if (colorSelect.value == "" || productQuantity < 1 || productQuantity > 100) {
@@ -52,12 +50,10 @@ console.log(product);
 
   let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // trouver  element  dont id est egal à newItem.id 
+  // trouver  element  dont id est egal à newItem.id
   const itemExists = currentCart.find(
     (item) => item.id === product._id && item.itemColor === colorSelect.value
   );
-
-   
 
   const newItemQuantity = itemExists?.itemQuantity || 0;
 
@@ -67,29 +63,18 @@ console.log(product);
     itemQuantity: productQuantity + newItemQuantity,
   };
 
-    console.log(itemExists);
-
   if (itemExists) {
     // si  on trouve element avec le meme id on le remplace par newItem
     const index = currentCart.indexOf(itemExists);
-     
 
-    // Affiche le produit qui correspond à l'index (produit qui est dans le panier)
-     console.log(currentCart[index]);
-
-    // Ici on atteint la proprité itemQuantity du produit. C'est elle qui faut mettre à jour
-     console.log(currentCart[index].itemQuantity);
-    console.log(currentCart[index].itemColor);
-    currentCart[index] = newItem; 
+    currentCart[index] = newItem;
+    // alert("La quantité a été mise à jour")
   } else {
     currentCart.push(newItem);
+    alert("Votre produit est dans le panier");
   }
-  
-  
+     // enregistrement du panier
   localStorage.setItem("cart", JSON.stringify(currentCart));
-  
-  alert("Votre produit est dans le panier");
-  
 };
 
 window.addEventListener("load", start);

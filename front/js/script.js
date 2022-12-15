@@ -8,7 +8,7 @@ const start = () => {
             .then((data) => data.json())
             .then((products) => {
                   for (let product of products) {
-                        console.log(product.name);
+                  
                         //insertion des produits-page d'acceuil
                         const newProduct = document.createElement("a");
                         newProduct.setAttribute("href", `product.html?id=${product._id}`);
