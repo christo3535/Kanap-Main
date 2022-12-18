@@ -170,7 +170,7 @@ const allRegex = [
 ];
 // fonction de verification des champs du formulaire
 const checkInputs = () => {
-  let data = {};
+  let datas = {};
   let validForm = true;
 
   for (let field of allRegex) {
@@ -197,11 +197,11 @@ const checkInputs = () => {
       }
     }
 
-    data[field.name] = inputValue;
+    datas[field.name] = inputValue;
   }
 
   if (validForm) {
-    return data;
+    return datas;
   } else {
     return false;
   }
@@ -211,7 +211,7 @@ const checkInputs = () => {
 const ordre = () => {
   let data = checkInputs();
   if (!data) {
-    alert("Veuillez remplir le formulaire corectement");
+    alert("Veuillez remplir le formulaire correctement");
 
     return;
   }
@@ -219,7 +219,7 @@ const ordre = () => {
   let products = JSON.parse(localStorage.getItem("cart")) || [];
   let productData = [];
   if (!products[0]) {
-    alert("Veillez remplir votre pannier");
+    alert("Votre panier est vide");
 
     return;
   }
@@ -250,13 +250,14 @@ const ordre = () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      // console.log("Success:", data);
+      
       localStorage.removeItem("cart");
       window.location.replace("confirmation.html?orderId=" + data.orderId);
     })
 
     .catch((error) => {
       console.error("Error:", error);
+    
     });
 };
 

@@ -12,10 +12,11 @@ const toCart = document.querySelector("#addToCart");
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
 
+
 // Récupération du produit depuis l'API
-// Affichage des élements des  produits
+// Affichage des élements du  produit
 const start = () => {
-  fetch(KanapAPI + id)
+  fetch(KanapAPI + id)  
     .then((res) => res.json())
     .then((product) => {
       title.textContent = product.name;
@@ -67,15 +68,15 @@ const produitAjout = (product) => {
     // si  on trouve element avec le meme id on le remplace par newItem
     const index = currentCart.indexOf(itemExists);
 
-    currentCart[index] = newItem;
-    // alert("La quantité a été mise à jour")
+    currentCart[index] = newItem; 
+    
   } else {
     currentCart.push(newItem);
-
+    alert("Votre produit est dans le panier");
+ 
   }
-     // enregistrement du panier
+  // enregistrement du panier
   localStorage.setItem("cart", JSON.stringify(currentCart));
-  alert("Votre produit est dans le panier");
 
 };
 
