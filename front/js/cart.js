@@ -179,13 +179,22 @@ const checkInputs = () => {
     //la valeur de l'input
     let inputValue = fieldInput.value;
 
-    fieldInput.addEventListener("change", () => {
+    fieldInput.addEventListener("change", (e) => {
+      
+    
+      //s'il y a regex verification
+      
+      if(!field.regex.test(e.target.value)){
       //efacce le message d'erreur quand on modifie le champs grace a textContent
-      fieldInput.nextElementSibling.textContent = field.validate;
+
+        fieldInput.nextElementSibling.textContent = field.error;
+      }else {
+        fieldInput.nextElementSibling.textContent = field.validate;
+      }
     });
 
-    // s'il y a regex verification
-    if (field.regex) {
+  
+    
       // test de la valeur mise par l'utilisateur  si regex valide
 
       if (!field.regex.test(inputValue)) {
@@ -195,7 +204,7 @@ const checkInputs = () => {
 
         validForm = false;
       }
-    }
+    
 
     datas[field.name] = inputValue;
   }

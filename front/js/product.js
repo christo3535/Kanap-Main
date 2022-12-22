@@ -55,6 +55,7 @@ const produitAjout = (product) => {
   const itemExists = currentCart.find(
     (item) => item.id === product._id && item.itemColor === colorSelect.value
   );
+   
 
   const newItemQuantity = itemExists?.itemQuantity || 0;
 
@@ -69,6 +70,8 @@ const produitAjout = (product) => {
     const index = currentCart.indexOf(itemExists);
 
     currentCart[index] = newItem; 
+
+    // alert("La quantité est mise a jour")
     
   } else {
     currentCart.push(newItem);
